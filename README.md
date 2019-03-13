@@ -1,8 +1,6 @@
 # Kampainer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/kampainer`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Unofficial Ruby wrapper for the Campaigner Elements API
 
 ## Installation
 
@@ -16,10 +14,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install kampainer
-
 ## Usage
 
 TODO: Write usage instructions here
@@ -32,7 +26,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/kampainer.
+Bug reports and pull requests are welcome on GitHub at https://github.com/varyonic/kampainer.
 
 ## License
 
