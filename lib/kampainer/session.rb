@@ -21,6 +21,11 @@ module Kampainer
       commit(contact_management_url, 'ListAttributes', xml_request)
     end
 
+    def list_test_contacts
+      xml_request = build_xml_request('ListTestContacts')
+      commit(contact_management_url, 'ListTestContacts', xml_request)
+    end
+
     protected
 
     def build_xml_request(action_name, *nodes)
