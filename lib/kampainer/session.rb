@@ -16,6 +16,11 @@ module Kampainer
       @logger = logger || Logger.new('/dev/null')
     end
 
+    def get_contacts
+      xml_request = build_xml_request('GetContacts')
+      commit(contact_management_url, 'GetContacts', xml_request)
+    end
+
     def list_attributes
       xml_request = build_xml_request('ListAttributes')
       commit(contact_management_url, 'ListAttributes', xml_request)
@@ -48,6 +53,11 @@ module Kampainer
 
     def parse(xml)
       xmldoc = Nokogiri::XML(xml)
+
+      header = xmldoc.xpath('//soap:Header/*')
+      response_header = Kampainer.const_get(header[0].name).from_xml(header[0].to_s)
+      raise Error, response_header.message if response_header.error_flag?
+
       body = xmldoc.xpath('//soap:Body/*[1]')[0]
 
       response = []

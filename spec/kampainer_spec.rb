@@ -30,4 +30,12 @@ RSpec.describe Kampainer do
     expect(contact.last_name).to be_present
     expect(contact.email).to be_present
   end
+
+  describe "gets contacts" do
+    it "fails gracefully if invalid request" do
+      expect do
+        subject.get_contacts
+      end.to raise_error Kampainer::Error, /INVALID_CONTACT_KEYS: Invalid ContactKeys. Cannot be null/
+    end
+  end
 end

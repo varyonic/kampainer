@@ -7,6 +7,7 @@ require 'kampainer/contact.rb'
 require 'kampainer/http_request'
 require "kampainer/session"
 require 'kampainer/request_body'
+require 'kampainer/response'
 
 module Kampainer
   class Error < StandardError; end
