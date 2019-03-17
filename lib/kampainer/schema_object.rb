@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'roxml'
 
 module Kampainer
@@ -13,6 +14,15 @@ module Kampainer
       variables = instance_variables - [:@roxml_references]
       s = variables.map { |iv| "#{iv}: #{instance_variable_get(iv).inspect}" }.join(', ')
       "<#{self.class.name}: #{s} >"
+    end
+  end
+
+  # https://stackoverflow.com/questions/2844106/ruby-roxml-how-to-get-an-array-to-render-its-xml
+  class SchemaCollection < SchemaObject
+    extend Forwardable
+
+    class << self
+      alias_method :[], :new
     end
   end
 end
