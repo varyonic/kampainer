@@ -16,9 +16,13 @@ module Kampainer
       @logger = logger || Logger.new('/dev/null')
     end
 
-    def get_contacts
-      xml_request = build_xml_request('GetContacts')
-      commit(contact_management_url, 'GetContacts', xml_request)
+    # @param *keys One or more contact keys.
+    def get_contacts(*keys)
+      contact_keys = Contact::Keys[]
+      keys.map { |key| contact_keys << Contact::Key.new(key) }
+      filter = Contact::Filter.new(keys: contact_keys)
+      xml_request = build_xml_request('GetContacts', filter.to_xml)
+      commit(contact_management_url, 'GetContacts', xml_request)[0].to_a
     end
 
     def list_attributes

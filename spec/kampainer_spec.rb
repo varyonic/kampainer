@@ -37,5 +37,16 @@ RSpec.describe Kampainer do
         subject.get_contacts
       end.to raise_error Kampainer::Error, /INVALID_CONTACT_KEYS: Invalid ContactKeys. Cannot be null/
     end
+
+    let(:test_contacts) { subject.list_test_contacts }
+    let(:test_contact) { test_contacts.sample }
+
+    it "gets a single contact by unique identifer" do
+      contacts = subject.get_contacts(unique_identifier: test_contact.email)
+      contact = contacts.first
+
+      expect(contact.key.id).to eq test_contact.key.id
+      # TODO: expect(contact.email).to eq test_contact.email
+    end
   end
 end

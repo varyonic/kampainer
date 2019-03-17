@@ -24,5 +24,10 @@ module Kampainer
     class << self
       alias_method :[], :new
     end
+
+    def initialize(collection = [])
+      @collection = collection
+    end
+    def_delegators :collection, :length, :<<, :to_a
   end
 end
