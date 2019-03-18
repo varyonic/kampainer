@@ -31,6 +31,14 @@ module Kampainer
       commit(contact_management_url, 'DeleteAttribute', xml_request)
     end
 
+    # @param *keys One or more keys of contacts to delete.
+    def delete_contacts(*keys)
+      contact_keys = ArrayOfContactKey[]
+      keys.map { |key| contact_keys << Contact::Key.new(key) }
+      xml_request = build_xml_request('DeleteContacts', contact_keys.to_xml)
+      commit(contact_management_url, 'DeleteContacts', xml_request)[0].to_a
+    end      
+
     # @param *keys One or more contact keys.
     def get_contacts(*keys)
       contact_keys = Contact::Keys[]
@@ -38,6 +46,12 @@ module Kampainer
       filter = Contact::Filter.new(keys: contact_keys)
       xml_request = build_xml_request('GetContacts', filter.to_xml)
       commit(contact_management_url, 'GetContacts', xml_request)[0].to_a
+    end
+
+    def immediate_upload(contact)
+      contacts = Contacts.new(Array(contact))
+      xml_request = build_xml_request('ImmediateUpload', contacts.to_xml)
+      commit(contact_management_url, 'ImmediateUpload', xml_request)
     end
 
     # @option filters [Boolean] include_all_default_attributes

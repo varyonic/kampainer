@@ -76,4 +76,27 @@ RSpec.describe Kampainer do
       # TODO: expect(contact.email).to eq test_contact.email
     end
   end
+
+  describe "immediate upload" do
+    let(:contact) do
+      email = "#{SecureRandom.hex}@example.com"
+      Kampainer::Contact.new(
+        first_name: 'John',
+        last_name: 'Smith',
+        email_address: email,
+        phone: '555-555-5555',
+        email_format: 'HTML',
+        is_test_contact: true,
+        key: Kampainer::Contact::Key.new(unique_identifier: email, id: 0)
+      )
+    end
+
+    it "posts a contact" do
+      subject.immediate_upload(contact)
+      download = subject.get_contacts(unique_identifier: contact.email_address).first
+      expect(download.key.unique_identifier).to eq contact.key.unique_identifier
+
+      subject.delete_contacts(id: download.key.id)
+    end
+  end
 end
