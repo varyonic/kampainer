@@ -25,8 +25,12 @@ module Kampainer
       commit(contact_management_url, 'GetContacts', xml_request)[0].to_a
     end
 
-    def list_attributes
-      xml_request = build_xml_request('ListAttributes')
+    # @option filters [Boolean] include_all_default_attributes
+    # @option filters [Boolean] include_all_custom_attributes
+    # @option filters [Boolean] include_all_system_attributes
+    def list_attributes(filters)
+      filter_xml = Attribute::Filter.new(filters).to_xml
+      xml_request = build_xml_request('ListAttributes', filter_xml)
       commit(contact_management_url, 'ListAttributes', xml_request)
     end
 

@@ -10,7 +10,11 @@ RSpec.describe Kampainer do
   before { subject.logger = Logger.new(STDOUT) if ENV['CAMPAIGNER_LOG'] }
 
   it "gets a list of attributes" do
-    list = subject.list_attributes
+    list = subject.list_attributes(
+      include_all_default_attributes: true,
+      include_all_custom_attributes: false,
+      include_all_system_attributes: false)
+    expect(list.length).to eq 6
 
     fname_attribute = list.find { |item| item.name == 'First Name' }
     expect(fname_attribute).to be_present
