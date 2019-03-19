@@ -41,10 +41,11 @@ module Kampainer
 
     # @param *keys One or more contact keys.
     def get_contacts(*keys)
-      contact_keys = Contact::Keys[]
+      contact_keys = ContactKeys[]
       keys.map { |key| contact_keys << Contact::Key.new(key) }
-      filter = Contact::Filter.new(keys: contact_keys)
-      xml_request = build_xml_request('GetContacts', filter.to_xml)
+      filter = ContactsDataFilter.new(keys: contact_keys)
+      attribute_filter = ContactInformationFilter.new(include: 'static,custom,system')
+      xml_request = build_xml_request('GetContacts', filter.to_xml, attribute_filter.to_xml)
       commit(contact_management_url, 'GetContacts', xml_request)[0].to_a
     end
 

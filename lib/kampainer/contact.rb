@@ -7,16 +7,6 @@ module Kampainer
       xml_accessor :unique_identifier, from: 'ContactUniqueIdentifier'
     end
 
-    class Keys < SchemaCollection
-      xml_name 'ContactKeys'
-      xml_reader :collection, as: [Key]
-    end
-
-    class Filter < SchemaObject
-      xml_name 'contactFilter'
-      xml_accessor :keys, as: Keys, from: 'ContactKeys'
-    end
-
     xml_name 'ContactData'
     xml_accessor :key, as: Key, from: 'ContactKey'
     xml_accessor :first_name
@@ -28,9 +18,45 @@ module Kampainer
     xml_accessor :is_test_contact
   end
 
+  class ContactKeys < SchemaCollection
+    xml_reader :collection, as: [Contact::Key]
+  end
+
+  class ContactsDataFilter < SchemaObject
+    xml_name 'contactFilter'
+    xml_accessor :keys, as: ContactKeys, from: 'ContactKeys'
+  end
+
+  class ContactInformationFilter < SchemaObject
+    xml_name 'contactInformationFilter' # GetContacts
+    xml_accessor :include_static_attributes
+    xml_accessor :include_custom_attributes
+    xml_accessor :include_system_attributes
+
+    def initialize(options)
+      options.each do |k, v|
+        @include_static_attributes = !!v if k.to_s =~ /static/ || v.to_s =~ /static/
+        @include_custom_attributes = !!v if k.to_s =~ /custom/ || v.to_s =~ /custom/
+        @include_system_attributes = !!v if k.to_s =~ /system/ || v.to_s =~ /system/
+      end
+    end
+  end
+
   # GetContacts
-  class ContactDetailData < Contact;
+  class ContactDetailData < SchemaObject
+    class StaticAttributes < SchemaObject
+      xml_reader :first_name
+      xml_reader :last_name
+      xml_reader :email
+      xml_reader :phone
+      xml_reader :email_format
+      xml_reader :status
+      xml_reader :is_test_contact
+    end
+
     xml_name 'ContactDetailData'
+    xml_reader :key, as: Contact::Key, from: 'ContactKey'
+    xml_reader :static_attributes, as: StaticAttributes
   end
 
   # GetContacts

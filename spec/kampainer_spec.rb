@@ -73,7 +73,7 @@ RSpec.describe Kampainer do
       contact = contacts.first
 
       expect(contact.key.id).to eq test_contact.key.id
-      # TODO: expect(contact.email).to eq test_contact.email
+      expect(contact.static_attributes.email).to eq test_contact.email
     end
   end
 
