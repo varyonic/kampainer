@@ -10,7 +10,13 @@ class RequestBody < Nokogiri::XML::Builder
             doc.Username(username)
             doc.Password(password)
           end
-          request.each { |node| body.parent << node }
+          request.each do |node|
+            if node.is_a?(Hash)
+              node.each { |key, val| body.send(key, val) }
+            else
+              body.parent << node
+            end
+          end
         end
       end
     end

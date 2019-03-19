@@ -24,6 +24,29 @@ RSpec.describe Kampainer do
     expect(fname_attribute.data_type).to eq 'String'
   end
 
+  describe "create attribute" do
+    let(:custom_attribute_name) { "test-#{SecureRandom.hex}" }
+    let(:custom_attribute) do
+      {
+        attribute_name: custom_attribute_name,
+        attribute_type: 'String',
+        default_value: 'test-default'
+      }
+    end
+
+    it "creates a custom attribute" do
+      attribute_id = subject.create_update_attribute(custom_attribute)
+      expect(attribute_id).to be_a(Integer)
+
+      custom_attributes = subject.list_attributes(include_all_custom_attributes: true)
+      attribute = custom_attributes.find { |item| item.name == custom_attribute_name }
+      expect(attribute).to be_present
+      expect(attribute.id).to eq attribute_id
+
+      subject.delete_attribute(attribute.id)
+    end
+  end
+
   it "gets a list of test contacts" do
     list = subject.list_test_contacts
 

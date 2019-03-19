@@ -16,6 +16,21 @@ module Kampainer
       @logger = logger || Logger.new('/dev/null')
     end
 
+    # @option params [String] attribute_name
+    # @option params [String] attribute_type
+    # @option params [String|??] default_value
+    # @return [Integer] attribute id
+    def create_update_attribute(params)
+      params.transform_keys! { |key| key.to_s.camelcase(:lower) }
+      xml_request = build_xml_request('CreateUpdateAttribute', params)
+      commit(contact_management_url, 'CreateUpdateAttribute', xml_request)[0].to_i
+    end
+
+    def delete_attribute(id)
+      xml_request = build_xml_request('DeleteAttribute', id: id)
+      commit(contact_management_url, 'DeleteAttribute', xml_request)
+    end
+
     # @param *keys One or more contact keys.
     def get_contacts(*keys)
       contact_keys = Contact::Keys[]
@@ -73,6 +88,8 @@ module Kampainer
       body.xpath('*')&.each do |node|
         node.elements.each do |childnode|
           response << Kampainer.const_get(childnode.name).from_xml(childnode.to_s)
+        rescue
+          response << childnode.inner_text
         end
       end
 
