@@ -7,6 +7,16 @@ module Kampainer
       xml_accessor :unique_identifier, from: 'ContactUniqueIdentifier'
     end
 
+    class CustomAttribute < SchemaObject
+      xml_name 'CustomAttribute'
+      xml_accessor :id, as: Integer, from: :attr
+      xml_accessor :value, from: :content
+    end
+
+    class CustomAttributes < SchemaCollection
+      xml_accessor :collection, as: [CustomAttribute]
+    end
+
     xml_name 'ContactData'
     xml_accessor :key, as: Key, from: 'ContactKey'
     xml_accessor :first_name
@@ -16,6 +26,7 @@ module Kampainer
     xml_accessor :email_format
     xml_accessor :status
     xml_accessor :is_test_contact
+    xml_accessor :custom_attributes, as: CustomAttributes
   end
 
   class ContactKeys < SchemaCollection
