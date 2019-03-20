@@ -54,9 +54,23 @@ module Kampainer
       xml_reader :is_test_contact
     end
 
+    class AttributeDetails < SchemaObject
+      xml_name 'AttributeDetails'
+      xml_reader :id, as: Integer
+      xml_reader :name
+      xml_reader :value
+      xml_reader :default_value
+    end
+
+    class ArrayOfAttributeDetails < SchemaCollection
+      xml_name 'CustomAttributes'
+      xml_reader :collection, as: [AttributeDetails]
+    end
+
     xml_name 'ContactDetailData'
     xml_reader :key, as: Contact::Key, from: 'ContactKey'
     xml_reader :static_attributes, as: StaticAttributes
+    xml_reader :custom_attributes, as: ArrayOfAttributeDetails, from: 'CustomAttributes'
   end
 
   # GetContacts

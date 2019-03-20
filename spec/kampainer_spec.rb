@@ -1,4 +1,36 @@
 RSpec.describe Kampainer do
+  def session
+    Kampainer::Session.new(
+      username: ENV.fetch('CAMPAIGNER_USERNAME'),
+      password: ENV.fetch('CAMPAIGNER_PASSWORD')
+    )
+  end
+
+  def setup_test_attribute
+    @test_attribute_name = "test-#{SecureRandom.hex}"
+    @test_attribute_id = session.create_update_attribute(
+      attribute_name: @test_attribute_name,
+      attribute_type: 'String',
+      default_value: 'test-default')
+  end
+
+  def cleanup_test_attribute
+    session.delete_attribute(@test_attribute_id)
+  end
+
+  def cleanup_all_test_attributes
+    attrs = session.list_attributes(include_all_custom_attributes: true)
+    ids = attrs.select { |attr| attr.name =~ /^test/ }.map(&:id)
+    ids.each { |id| session.delete_attribute(id) }
+  end
+
+  def cleanup_all_test_contacts
+    test_contacts = session.list_test_contacts
+    smiths = test_contacts.select { |c| c.last_name == 'Smith' }
+    smiths.pop
+    session.delete_contacts *smiths.map { |c| Hash[id: c.key.id] }
+  end
+
   it "has a version number" do
     expect(Kampainer::VERSION).not_to be nil
   end
@@ -97,6 +129,29 @@ RSpec.describe Kampainer do
       expect(download.key.unique_identifier).to eq contact.key.unique_identifier
 
       subject.delete_contacts(id: download.key.id)
+    end
+  end
+
+  context "custom attribute defined" do
+    let(:custom_attribute_name) { @test_attribute_name }
+    let(:custom_attribute_id) { @test_attribute_id }
+
+    before(:all) do
+      setup_test_attribute
+    end
+    after(:all) do
+      cleanup_test_attribute
+    end
+
+    describe "gets contacts" do
+      let(:test_contacts) { subject.list_test_contacts }
+      let(:test_contact) { test_contacts.sample }
+
+      it "gets a single contact by unique identifer" do
+        contact = subject.get_contacts(unique_identifier: test_contact.email).first
+        custom_value = contact.custom_attributes.to_a.find { |ca| ca.id == custom_attribute_id }
+        expect(custom_value.default_value).to eq 'test-default'
+      end
     end
   end
 end
