@@ -1,8 +1,5 @@
 RSpec.describe Kampainer do
   def contact_manager
-    username = ENV.fetch('CAMPAIGNER_USERNAME')
-    password = ENV.fetch('CAMPAIGNER_PASSWORD')
-    session = Kampainer::Session.new(username: username, password: password)
     Kampainer::ContactManager.new(session)
   end
 
@@ -31,13 +28,6 @@ RSpec.describe Kampainer do
     contact_manager.delete_contacts *smiths.map { |c| Hash[id: c.key.id] }
   end
 
-  it "has a version number" do
-    expect(Kampainer::VERSION).not_to be nil
-  end
-
-  let(:username) { ENV.fetch('CAMPAIGNER_USERNAME') }
-  let(:password) { ENV.fetch('CAMPAIGNER_PASSWORD') }
-  let(:session) { Kampainer::Session.new(username: username, password: password) }
   subject { Kampainer::ContactManager.new(session) }
 
   before { subject.session.logger = Logger.new(STDOUT) if ENV['CAMPAIGNER_LOG'] }

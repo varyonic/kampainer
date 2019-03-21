@@ -1,6 +1,12 @@
 require "bundler/setup"
 require "kampainer"
 
+def session
+  username = ENV.fetch('CAMPAIGNER_USERNAME')
+  password = ENV.fetch('CAMPAIGNER_PASSWORD')
+  Kampainer::Session.new(username: username, password: password)
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
