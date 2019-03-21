@@ -119,7 +119,7 @@ RSpec.describe Kampainer do
         phone: '555-555-5555',
         email_format: 'HTML',
         is_test_contact: true,
-        key: Kampainer::Contact::Key.new(unique_identifier: email, id: 0)
+        key: Kampainer::ContactKey.new(unique_identifier: email, id: 0)
       )
     end
 
@@ -168,7 +168,7 @@ RSpec.describe Kampainer do
           email_format: 'HTML',
           is_test_contact: true,
           custom_attributes: Kampainer::Contact::CustomAttributes.new([custom_attribute_value]),
-          key: Kampainer::Contact::Key.new(unique_identifier: email, id: 0)
+          key: Kampainer::ContactKey.new(unique_identifier: email, id: 0)
         )
       end
 

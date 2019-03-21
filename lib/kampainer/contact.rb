@@ -1,11 +1,13 @@
 module Kampainer
-  class Contact < SchemaObject
 
-    class Key < SchemaObject
-      xml_name 'ContactKey'
-      xml_accessor :id, as: Integer, from: 'ContactId'
-      xml_accessor :unique_identifier, from: 'ContactUniqueIdentifier'
-    end
+  class ContactKey < SchemaObject
+    xml_name 'ContactKey'
+    xml_accessor :id, as: Integer, from: 'ContactId'
+    xml_accessor :unique_identifier, from: 'ContactUniqueIdentifier'
+  end
+
+  class Contact < SchemaObject
+    class Key < ContactKey; end
 
     class CustomAttribute < SchemaObject
       xml_name 'CustomAttribute'
@@ -109,7 +111,7 @@ module Kampainer
   # ImmediateUpload  
   class UploadResultData < SchemaObject
     xml_accessor :index, as: Integer
-    xml_accessor :key, as: Contact::Key, from: 'ContactKey'
+    xml_accessor :key, as: ContactKey, from: 'ContactKey'
     xml_accessor :result_description
   end
 
