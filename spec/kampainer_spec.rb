@@ -1,34 +1,34 @@
 RSpec.describe Kampainer do
-  def session
-    Kampainer::Session.new(
-      username: ENV.fetch('CAMPAIGNER_USERNAME'),
-      password: ENV.fetch('CAMPAIGNER_PASSWORD')
-    )
+  def contact_manager
+    username = ENV.fetch('CAMPAIGNER_USERNAME')
+    password = ENV.fetch('CAMPAIGNER_PASSWORD')
+    session = Kampainer::Session.new(username: username, password: password)
+    Kampainer::ContactManager.new(session)
   end
 
   def setup_test_attribute
     @test_attribute_name = "test-#{SecureRandom.hex}"
-    @test_attribute_id = session.create_update_attribute(
+    @test_attribute_id = contact_manager.create_update_attribute(
       attribute_name: @test_attribute_name,
       attribute_type: 'String',
       default_value: 'test-default')
   end
 
   def cleanup_test_attribute
-    session.delete_attribute(@test_attribute_id)
+    contact_manager.delete_attribute(@test_attribute_id)
   end
 
   def cleanup_all_test_attributes
     attrs = session.list_attributes(include_all_custom_attributes: true)
     ids = attrs.select { |attr| attr.name =~ /^test/ }.map(&:id)
-    ids.each { |id| session.delete_attribute(id) }
+    ids.each { |id| contact_manager.delete_attribute(id) }
   end
 
   def cleanup_all_test_contacts
     test_contacts = session.list_test_contacts
     smiths = test_contacts.select { |c| c.last_name == 'Smith' }
     smiths.pop
-    session.delete_contacts *smiths.map { |c| Hash[id: c.key.id] }
+    contact_manager.delete_contacts *smiths.map { |c| Hash[id: c.key.id] }
   end
 
   it "has a version number" do
@@ -37,9 +37,10 @@ RSpec.describe Kampainer do
 
   let(:username) { ENV.fetch('CAMPAIGNER_USERNAME') }
   let(:password) { ENV.fetch('CAMPAIGNER_PASSWORD') }
-  subject { Kampainer::Session.new(username: username, password: password) }
+  let(:session) { Kampainer::Session.new(username: username, password: password) }
+  subject { Kampainer::ContactManager.new(session) }
 
-  before { subject.logger = Logger.new(STDOUT) if ENV['CAMPAIGNER_LOG'] }
+  before { subject.session.logger = Logger.new(STDOUT) if ENV['CAMPAIGNER_LOG'] }
 
   it "gets a list of attributes" do
     list = subject.list_attributes(

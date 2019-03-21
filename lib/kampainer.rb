@@ -2,7 +2,8 @@ require "kampainer/version"
 
 require 'kampainer/schema_object'
 require 'kampainer/contact_attribute'
-require 'kampainer/contact.rb'
+require 'kampainer/contact'
+require 'kampainer/contact_manager'
 
 require 'kampainer/http_request'
 require "kampainer/session"
