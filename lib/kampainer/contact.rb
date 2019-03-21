@@ -31,6 +31,17 @@ module Kampainer
 
   class ContactKeys < SchemaCollection
     xml_reader :collection, as: [Contact::Key]
+
+    def initialize(keys = [])
+      @collection = keys.map do |key|
+        case key
+        when Contact::Key then key
+        when Integer then Contact::Key.new(id: key)
+        when String then Contact::Key.new(unique_identifier: key)
+        else Contact::Key.new(key)
+        end
+      end
+    end
   end
 
   class ContactsDataFilter < SchemaObject
@@ -108,8 +119,7 @@ module Kampainer
   end
 
   # DeleteContacts
-  class ArrayOfContactKey < SchemaCollection
+  class ArrayOfContactKey < ContactKeys
     xml_name 'contactKeys'
-    xml_reader :collection, as: [Contact::Key]
   end
 end

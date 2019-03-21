@@ -101,7 +101,7 @@ RSpec.describe Kampainer do
     let(:test_contact) { test_contacts.sample }
 
     it "gets a single contact by unique identifer" do
-      contacts = subject.get_contacts(unique_identifier: test_contact.email)
+      contacts = subject.get_contacts(test_contact.key.id) # get_contacts(Integer)
       contact = contacts.first
 
       expect(contact.key.id).to eq test_contact.key.id
@@ -125,7 +125,7 @@ RSpec.describe Kampainer do
 
     it "posts a contact" do
       subject.immediate_upload(contact)
-      download = subject.get_contacts(unique_identifier: contact.email_address).first
+      download = subject.get_contacts(contact.email_address).first # get_contacts(String)
       expect(download.key.unique_identifier).to eq contact.key.unique_identifier
 
       subject.delete_contacts(id: download.key.id)
@@ -148,7 +148,7 @@ RSpec.describe Kampainer do
       let(:test_contact) { test_contacts.sample }
 
       it "gets a single contact by unique identifer" do
-        contact = subject.get_contacts(unique_identifier: test_contact.email).first
+        contact = subject.get_contacts(unique_identifier: test_contact.email).first # get_contacts(Hash)
         custom_value = contact.custom_attributes.to_a.find { |ca| ca.id == custom_attribute_id }
         expect(custom_value.default_value).to eq 'test-default'
       end
@@ -179,7 +179,7 @@ RSpec.describe Kampainer do
         custom_value = download.custom_attributes.to_a.find { |ca| ca.id == custom_attribute_id }
         expect(custom_value.value).to eq 'xxzzy'
 
-        subject.delete_contacts(id: download.key.id)
+        subject.delete_contacts(download.key.id) # delete_contacts(Integer)
       end
     end
   end
