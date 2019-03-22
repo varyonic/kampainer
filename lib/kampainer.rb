@@ -4,6 +4,8 @@ require 'kampainer/schema_object'
 require 'kampainer/contact_attribute'
 require 'kampainer/contact'
 require 'kampainer/contact_manager'
+require 'kampainer/campaign'
+require 'kampainer/campaign_manager'
 
 require 'kampainer/http_request'
 require "kampainer/session"
