@@ -7,6 +7,18 @@ module Kampainer
       @session = session
     end
 
+    def create_update_campaign(campaign)
+      call('CreateUpdateCampaign', campaign.to_xml)[0].to_i
+    end
+
+    def delete_campaign(id)
+      call('DeleteCampaign', campaignId: id)
+    end
+
+    def get_campaign_summary(id)
+      call('GetCampaignSummary', campaignId: id)
+    end
+
     def list_from_emails
       call('ListFromEmails')
     end
