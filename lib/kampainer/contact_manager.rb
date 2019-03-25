@@ -29,7 +29,7 @@ module Kampainer
     # @param *keys One or more contact keys.
     def get_contacts(*keys)
       filter = ContactsDataFilter.new(keys: ContactKeys[keys])
-      attribute_filter = ContactInformationFilter.new(include: 'static,custom,system')
+      attribute_filter = ContactInformationFilter.new(include: 'static,custom,groups')
       call('GetContacts', filter.to_xml, attribute_filter.to_xml)[0].to_a
     end
 

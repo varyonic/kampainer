@@ -28,6 +28,26 @@ RSpec.describe Kampainer do
     contact_manager.delete_contacts *smiths.map { |c| Hash[id: c.key.id] }
   end
 
+  def list_manager
+    Kampainer::ListManager.new(session)
+  end
+
+  def setup_test_contact_group
+    @test_contact_group_name = "test-#{SecureRandom.hex}"
+    contact_group = Kampainer::ContactGroup.new(type: 'MailingList', name: @test_contact_group_name, description: "test")
+    @test_contact_group_id = list_manager.create_update_contact_group(contact_group)
+  end
+
+  def cleanup_test_contact_group
+    list_manager.delete_contact_groups(@test_contact_group_id)
+  end
+
+  def cleanup_all_test_contact_groups
+    contact_groups = list_manager.list_contact_groups
+    test_groups = contact_groups.select { |g| g.name =~ /^test/ }
+    list_manager.delete_contact_groups *test_groups.map(&:id)
+  end
+
   subject { Kampainer::ContactManager.new(session) }
 
   before { subject.session.logger = Logger.new(STDOUT) if ENV['CAMPAIGNER_LOG'] }
@@ -123,12 +143,15 @@ RSpec.describe Kampainer do
   context "custom attribute defined" do
     let(:custom_attribute_name) { @test_attribute_name }
     let(:custom_attribute_id) { @test_attribute_id }
+    let(:contact_group_id) { @test_contact_group_id }
 
     before(:all) do
       setup_test_attribute
+      setup_test_contact_group
     end
     after(:all) do
       cleanup_test_attribute
+      cleanup_test_contact_group
     end
 
     describe "gets contacts" do
@@ -156,6 +179,7 @@ RSpec.describe Kampainer do
           email_format: 'HTML',
           is_test_contact: true,
           custom_attributes: Kampainer::Contact::CustomAttributes.new([custom_attribute_value]),
+          add_to_groups: Kampainer::ArrayOfInt.new([contact_group_id]),
           key: Kampainer::ContactKey.new(unique_identifier: email, id: 0)
         )
       end
@@ -166,6 +190,8 @@ RSpec.describe Kampainer do
         expect(download.key.unique_identifier).to eq contact.key.unique_identifier
         custom_value = download.custom_attributes.to_a.find { |ca| ca.id == custom_attribute_id }
         expect(custom_value.value).to eq 'xxzzy'
+        contact_group = download.contact_groups.to_a.find { |cg| cg.id == contact_group_id }
+        # FIXME: expect(contact_group.id).to eq contact_group_id
 
         subject.delete_contacts(download.key.id) # delete_contacts(Integer)
       end

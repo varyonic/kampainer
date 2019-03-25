@@ -6,6 +6,10 @@ module Kampainer
     xml_accessor :unique_identifier, from: 'ContactUniqueIdentifier'
   end
 
+  class ArrayOfInt < SchemaCollection
+    xml_accessor :collection, as: [Integer], from: 'int'
+  end
+
   class Contact < SchemaObject
     class Key < ContactKey; end
 
@@ -29,6 +33,7 @@ module Kampainer
     xml_accessor :status
     xml_accessor :is_test_contact
     xml_accessor :custom_attributes, as: CustomAttributes
+    xml_accessor :add_to_groups, as: ArrayOfInt
   end
 
   class ContactKeys < SchemaCollection
@@ -56,12 +61,14 @@ module Kampainer
     xml_accessor :include_static_attributes
     xml_accessor :include_custom_attributes
     xml_accessor :include_system_attributes
+    xml_accessor :include_group_membership_data
 
     def initialize(options)
       options.each do |k, v|
         @include_static_attributes = !!v if k.to_s =~ /static/ || v.to_s =~ /static/
         @include_custom_attributes = !!v if k.to_s =~ /custom/ || v.to_s =~ /custom/
         @include_system_attributes = !!v if k.to_s =~ /system/ || v.to_s =~ /system/
+        @include_group_membership_data = !!v if k.to_s =~ /group|member/ || v.to_s =~ /group|member/
       end
     end
   end
@@ -91,10 +98,15 @@ module Kampainer
       xml_reader :collection, as: [AttributeDetails]
     end
 
+    class ArrayOfContactGroupDescription < SchemaCollection
+      xml_reader :collection, as: [ContactGroupDescription]
+    end
+
     xml_name 'ContactDetailData'
     xml_reader :key, as: Contact::Key, from: 'ContactKey'
     xml_reader :static_attributes, as: StaticAttributes
     xml_reader :custom_attributes, as: ArrayOfAttributeDetails, from: 'CustomAttributes'
+    xml_reader :contact_groups, as: ArrayOfContactGroupDescription, from: 'group_membership_data'
   end
 
   # GetContacts
