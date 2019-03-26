@@ -5,6 +5,17 @@ module Kampainer
       xml_accessor :include_all_default_attributes?
       xml_accessor :include_all_custom_attributes?
       xml_accessor :include_all_system_attributes?
+
+      def initialize(options)
+        @include_all_default_attributes = false
+        @include_all_custom_attributes = false
+        @include_all_system_attributes = false
+        options.each do |k, v|
+          @include_all_default_attributes = !!v if k.to_s =~ /default/ || v.to_s =~ /default/
+          @include_all_custom_attributes = !!v if k.to_s =~ /custom/ || v.to_s =~ /custom/
+          @include_all_system_attributes = !!v if k.to_s =~ /system/ || v.to_s =~ /system/
+        end
+      end
     end
 
     xml_accessor :id, as: Integer
