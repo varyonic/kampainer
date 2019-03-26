@@ -33,10 +33,11 @@ module Kampainer
       call('GetContacts', filter.to_xml, attribute_filter.to_xml)[0].to_a
     end
 
+    # @return [ContactKey]
     def immediate_upload(contact)
       contact.key ||= ContactKey.new(unique_identifier: contact.email_address, id: 0)
       contacts = Contacts.new(Array(contact))
-      call('ImmediateUpload', contacts.to_xml)
+      call('ImmediateUpload', contacts.to_xml)[0].key
     end
 
     # @option filters [Boolean] include_all_default_attributes

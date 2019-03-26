@@ -132,9 +132,10 @@ RSpec.describe Kampainer do
     end
 
     it "posts a contact" do
-      subject.immediate_upload(contact)
+      key = subject.immediate_upload(contact)
       download = subject.get_contacts(contact.email_address).first # get_contacts(String)
       expect(download.key.unique_identifier).to eq contact.key.unique_identifier
+      expect(download.key.id).to eq key.id
 
       subject.delete_contacts(id: download.key.id)
     end
