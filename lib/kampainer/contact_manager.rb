@@ -34,6 +34,7 @@ module Kampainer
     end
 
     def immediate_upload(contact)
+      contact.key ||= ContactKey.new(unique_identifier: contact.email_address, id: 0)
       contacts = Contacts.new(Array(contact))
       call('ImmediateUpload', contacts.to_xml)
     end

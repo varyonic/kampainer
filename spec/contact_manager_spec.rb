@@ -180,7 +180,6 @@ RSpec.describe Kampainer do
           is_test_contact: true,
           custom_attributes: Kampainer::Contact::CustomAttributes.new([custom_attribute_value]),
           add_to_groups: Kampainer::ArrayOfInt.new([contact_group_id]),
-          key: Kampainer::ContactKey.new(unique_identifier: email, id: 0)
         )
       end
 
