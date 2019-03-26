@@ -178,7 +178,7 @@ RSpec.describe Kampainer do
           phone: '555-555-5555',
           email_format: 'HTML',
           is_test_contact: true,
-          custom_attributes: Kampainer::Contact::CustomAttributes.new([custom_attribute_value]),
+          custom_attributes: [custom_attribute_value],
           add_to_groups: Kampainer::ArrayOfInt.new([contact_group_id]),
         )
       end

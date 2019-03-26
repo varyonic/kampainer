@@ -34,6 +34,11 @@ module Kampainer
     xml_accessor :is_test_contact
     xml_accessor :custom_attributes, as: CustomAttributes
     xml_accessor :add_to_groups, as: ArrayOfInt
+
+    def custom_attributes=(custom_attributes)
+      custom_attributes = CustomAttributes.new(custom_attributes) if custom_attributes.is_a?(Array)
+      @custom_attributes = custom_attributes
+    end
   end
 
   class ContactKeys < SchemaCollection
