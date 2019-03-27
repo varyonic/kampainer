@@ -39,6 +39,11 @@ module Kampainer
       custom_attributes = CustomAttributes.new(custom_attributes) if custom_attributes.is_a?(Array)
       @custom_attributes = custom_attributes
     end
+
+    def add_to_groups=(group_ids)
+      group_ids = ArrayOfInt.new(group_ids) unless group_ids.is_a?(SchemaObject)
+      @add_to_groups = group_ids
+    end
   end
 
   class ContactKeys < SchemaCollection

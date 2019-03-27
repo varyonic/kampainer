@@ -179,7 +179,7 @@ RSpec.describe Kampainer do
           email_format: 'HTML',
           is_test_contact: true,
           custom_attributes: [custom_attribute_value],
-          add_to_groups: Kampainer::ArrayOfInt.new([contact_group_id]),
+          add_to_groups: [contact_group_id],
         )
       end
 
