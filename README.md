@@ -1,5 +1,8 @@
 # Kampainer
 
+[![Gem Version](https://badge.fury.io/rb/kampainer.svg)](https://badge.fury.io/rb/kampainer)
+[![CircleCI](https://circleci.com/gh/varyonic/kampainer.svg?style=svg)](https://circleci.com/gh/varyonic/kampainer)
+
 Unofficial Ruby wrapper for the Campaigner Elements API
 
 ## Installation
@@ -16,7 +19,7 @@ And then execute:
 
 ## Usage
 
-TODO: Write usage instructions here
+See specs for sample usage.
 
 ## Development
 
