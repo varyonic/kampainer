@@ -2,6 +2,7 @@ module Kampainer
 
   # ListContactGroups
   class ContactGroupDescription < SchemaObject
+    xml_name 'ContactGroupDescription'
     xml_reader :type
     xml_reader :id
     xml_reader :name

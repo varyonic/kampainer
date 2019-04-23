@@ -24,7 +24,7 @@ module Kampainer
     def delete_contacts(*keys)
       contact_keys = ArrayOfContactKey[keys]
       call('DeleteContacts', contact_keys.to_xml)[0].to_a
-    end      
+    end
 
     # @param *keys One or more contact keys.
     def get_contacts(*keys)
