@@ -33,7 +33,7 @@ module Kampainer
     xml_accessor :status
     xml_accessor :is_test_contact
     xml_accessor :custom_attributes, as: CustomAttributes
-    xml_accessor :add_to_groups, as: ArrayOfInt
+    xml_accessor :add_to_group, as: ArrayOfInt
 
     def custom_attributes=(custom_attributes)
       custom_attributes = CustomAttributes.new(custom_attributes) if custom_attributes.is_a?(Array)
@@ -42,7 +42,7 @@ module Kampainer
 
     def add_to_groups=(group_ids)
       group_ids = ArrayOfInt.new(group_ids) unless group_ids.is_a?(SchemaObject)
-      @add_to_groups = group_ids
+      @add_to_group = group_ids
     end
   end
 
@@ -109,14 +109,15 @@ module Kampainer
     end
 
     class ArrayOfContactGroupDescription < SchemaCollection
+      xml_name 'GroupMembershipData'
       xml_reader :collection, as: [ContactGroupDescription]
     end
 
     xml_name 'ContactDetailData'
     xml_reader :key, as: Contact::Key, from: 'ContactKey'
     xml_reader :static_attributes, as: StaticAttributes
-    xml_reader :custom_attributes, as: ArrayOfAttributeDetails, from: 'CustomAttributes'
-    xml_reader :contact_groups, as: ArrayOfContactGroupDescription, from: 'group_membership_data'
+    xml_reader :custom_attributes, as: ArrayOfAttributeDetails
+    xml_reader :contact_groups, as: ArrayOfContactGroupDescription
   end
 
   # GetContacts
@@ -130,7 +131,7 @@ module Kampainer
     xml_accessor :collection, as: [Contact]
   end
 
-  # ImmediateUpload  
+  # ImmediateUpload
   class UploadResultData < SchemaObject
     xml_accessor :index, as: Integer
     xml_accessor :key, as: ContactKey, from: 'ContactKey'

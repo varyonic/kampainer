@@ -191,7 +191,7 @@ RSpec.describe Kampainer do
         custom_value = download.custom_attributes.to_a.find { |ca| ca.id == custom_attribute_id }
         expect(custom_value.value).to eq 'xxzzy'
         contact_group = download.contact_groups.to_a.find { |cg| cg.id == contact_group_id }
-        # FIXME: expect(contact_group.id).to eq contact_group_id
+        expect(contact_group.id).to eq contact_group_id
 
         subject.delete_contacts(download.key.id) # delete_contacts(Integer)
       end
